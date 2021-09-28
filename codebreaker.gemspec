@@ -5,7 +5,7 @@ require_relative "lib/codebreaker/version"
 Gem::Specification.new do |spec|
   spec.name          = "codebreaker"
   spec.version       = Codebreaker::VERSION
-  spec.authors       = ["Manfly1"]
+  spec.authors       = ["Andrii Ivaniuk"]
   spec.email         = ["aivanuyk0@gmail.com"]
 
   spec.summary       = "TODO: Write a short summary, because RubyGems requires one."
