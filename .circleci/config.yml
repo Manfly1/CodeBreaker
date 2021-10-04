@@ -6,7 +6,8 @@ version: 2.1
       working_directory: ~/repo
       description: The official
       docker:
-        - image: circleci/ruby:2.5.1
+        - image: circleci/ruby:2.7.0
+        - save_cache:
 
   caches:
      - &bundle_cache_full v2-repo-{{ checksum "Gemfile.lock"}}
@@ -53,10 +54,10 @@ version: 2.1
       steps:
         - defaults
         -  run_specs
+
   workflows:
     version: 2.1
     build:
       jobs:
         - lintering
         - run_specs
-      
