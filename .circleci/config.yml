@@ -25,12 +25,19 @@ version: 2.1
             key: *bunlde_cache
             paths:
               - vendor/bundle
+    run_linters:
+      description: This
+      steps:
+        - run:
+           name: rubocop
+           command: buncle exec rubocop
 
   jobs:
     lintering:
       executor: default
       steps:
         - defaults
+        - run_linters
 
   workflows:
     version: 2.1
