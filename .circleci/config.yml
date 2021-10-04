@@ -31,6 +31,16 @@ version: 2.1
         - run:
            name: rubocop
            command: buncle exec rubocop
+    run_specs:
+      steps:
+        - run:
+           name: run specs
+           command: |
+           mkdir /tmp/test-results
+           TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci test split --split-by=timings)"
+           bundle exec rspec --format progress \
+           --out /tmp/test-results/rspec.xml \
+           $TEST_FILES
 
   jobs:
     lintering:
@@ -38,7 +48,11 @@ version: 2.1
       steps:
         - defaults
         - run_linters
-
+    run_specs:
+      executor: default
+      steps:
+        - defaults
+        -  run_specs
   workflows:
     version: 2.1
     build:
