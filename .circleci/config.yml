@@ -7,10 +7,9 @@ version: 2.1
       description: The official
       docker:
         - image: circleci/ruby:2.5.1
-          environment:
-            RAILS_ENV: test
+
   caches:
-     - &bundle_cache_v1 v2-repo-{{ checksum "Gemfile.lock"}}
+     - &bundle_cache_full v2-repo-{{ checksum "Gemfile.lock"}}
      - &bunlde_cache v2-repo-
 
   commands:
@@ -19,7 +18,7 @@ version: 2.1
         - checkout
         - restore_cache:
             keys:
-              - *bunlde_cache_v1
+              - *bunlde_cache_full
               - *bunlde_cache
         - run: bundle install --path vendor/bundle
         - save_cache:
@@ -31,7 +30,7 @@ version: 2.1
     lintering:
       executor: default
       steps:
-        - defaults            
+        - defaults
 
   workflows:
     version: 2.1
