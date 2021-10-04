@@ -58,3 +58,5 @@ version: 2.1
     build:
       jobs:
         - lintering
+        - run_specs
+      
