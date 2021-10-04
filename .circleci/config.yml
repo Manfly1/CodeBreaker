@@ -1,2 +1,40 @@
 
 version: 2.1
+
+  executors:
+    default:
+      working_directory: ~/repo
+      description: The official
+      docker:
+        - image: circleci/ruby:2.5.1
+          environment:
+            RAILS_ENV: test
+  caches:
+     - &bundle_cache_v1 v2-repo-{{ checksum "Gemfile.lock"}}
+     - &bunlde_cache v2-repo-
+
+  commands:
+    defaults:
+      steps:
+        - checkout
+        - restore_cache:
+            keys:
+              - *bunlde_cache_v1
+              - *bunlde_cache
+        - run: bundle install --path vendor/bundle
+        - save_cache:
+            key: *bunlde_cache
+            paths:
+              - vendor/bundle
+
+  jobs:
+    lintering:
+      executor: default
+      steps:
+        - defaults            
+
+  workflows:
+    version: 2.1
+    build:
+      jobs:
+        - lintering
