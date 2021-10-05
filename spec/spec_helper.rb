@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "simplecov"
-SimpleCov.start
-
 ENV["DB_PATH"] = "#{Pathname(__FILE__).parent.dirname.realpath}/db/"
 ENV["DB_FILE"] = "results_test.yml"
 
+require 'bundler/setup'
 require "codebreaker"
 
 RSpec.configure do |config|
