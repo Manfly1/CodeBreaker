@@ -3,18 +3,23 @@
 module Codebreaker
   module Validation
     ERROR_MESSAGES = {
-      invalid_name: 'Name should be of 3 to 20 characters',
-      invalid_guess: 'Expect 4 digits from 1 to 6',
-      no_hints_left: 'No hints left, mate',
-      no_difficulty: 'No such difficulty',
-      no_save_data: 'No saved data is found'
+      invalid_name: "Name should be of 3 to 20 characters",
+      invalid_guess: "Expect 4 digits from 1 to 6",
+      no_hints_left: "No hints left, mate",
+      no_difficulty: "No such difficulty",
+      no_save_data: "No saved data is found"
     }.freeze
 
     class GameError < StandardError; end
+
     class NoSavedData < GameError; end
+
     class UnknownDifficulty < GameError; end
+
     class InvalidGuess < GameError; end
+
     class NoHintsLeft < GameError; end
+
     class InvalidName < GameError; end
 
     def validate_user_name(name, length)
