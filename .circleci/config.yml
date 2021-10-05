@@ -1,63 +1,76 @@
-
 version: 2.1
-
-  executors:
-    default:
-      working_directory: ~/repo
-      description: The official
-      docker:
-        - image: circleci/ruby:2.7.0
-        - save_cache:
-
-  caches:
-     - &bundle_cache_full v2-repo-{{ checksum "Gemfile.lock"}}
-     - &bunlde_cache v2-repo-
-
-  commands:
-    defaults:
-      steps:
-        - checkout
-        - restore_cache:
-            keys:
-              - *bunlde_cache_full
-              - *bunlde_cache
-        - run: bundle install --path vendor/bundle
-        - save_cache:
-            key: *bunlde_cache
-            paths:
-              - vendor/bundle
-    run_linters:
-      description: This
-      steps:
-        - run:
-           name: rubocop
-           command: buncle exec rubocop
-    run_specs:
-      steps:
-        - run:
-           name: run specs
-           command: |
-           mkdir /tmp/test-results
-           TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci test split --split-by=timings)"
-           bundle exec rspec --format progress \
-           --out /tmp/test-results/rspec.xml \
-           $TEST_FILES
-
-  jobs:
-    lintering:
-      executor: default
-      steps:
-        - defaults
-        - run_linters
-    run_specs:
-      executor: default
-      steps:
-        - defaults
-        -  run_specs
-
-  workflows:
-    version: 2.1
-    build:
-      jobs:
-        - lintering
-        - run_specs
+​
+executors:
+  default:
+    working_directory: ~/repo
+    description: The official CircleCI Ruby Docker image
+    docker:
+      - image: circleci/ruby:2.7.0
+        environment:
+          RAILS_ENV: test
+​
+caches:
+  - &bundle_cache v2-repo-{{ checksum "Gemfile.lock" }}
+​
+commands:
+  update_bundler:
+    steps:
+      - run:
+          name: install dependencies
+          command: |
+            gem update --system
+            gem install bundler
+  run_linters:
+    description: command to start linters
+    steps:
+      - run:
+          name: rubocop
+          command: bundle exec rubocop
+      - run:
+          name: fasterer
+          command: bundle exec fasterer
+​
+  run_specs:
+    steps:
+      - run:
+          name: run specs
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            bundle exec rspec --format progress \
+                              --out /tmp/test-results/rspec.xml \
+                              $TEST_FILES
+  setup_environment:
+    steps:
+      - checkout
+      - restore_cache:
+          key: *bundle_cache
+      - run:
+          command: |
+            gem update --system
+            gem install bundler
+            bundle install --path vendor/bundle
+      - save_cache:
+          key: *bundle_cache
+          paths:
+            - vendor/bundle
+jobs:
+  lintering:
+    executor: default
+    steps:
+      - setup_environment
+      - run_linters
+  run_specs:
+    executor: default
+    steps:
+      - setup_environment
+      - run_specs
+​
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - lintering
+      - run_specs:
+          requires:
+            - lintering
