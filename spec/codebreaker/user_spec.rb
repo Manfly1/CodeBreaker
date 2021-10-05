@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Codebreaker::User do
-  
   subject(:call) { described_class.new(name: name) }
 
   describe "#initialize" do

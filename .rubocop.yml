@@ -13,6 +13,11 @@ Metrics/BlockLength:
     - spec/game_spec.rb
   Max: 50
 
+Metrics/BlockLength:
+  Exclude:
+    - spec/codebreaker/game_spec.rb
+  Max: 50
+
 Style/StringLiteralsInInterpolation:
   Enabled: true
   EnforcedStyle: double_quotes
