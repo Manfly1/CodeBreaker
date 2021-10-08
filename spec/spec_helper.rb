@@ -15,9 +15,9 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.after do # or :each or :all, :suit
-    FileUtils.rm_rf(Dir[ENV["DB_PATH"]])
-  end
+  # config.after do # or :each or :all, :suit
+  #   FileUtils.rm_rf(Dir[ENV["DB_PATH"]])
+  # end
 end
 
 RSpec::Matchers.define :be_a_directory do
