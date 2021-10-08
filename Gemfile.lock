@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    codebreaker (0.1.0)
+    codebreaker_manfly (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -43,11 +43,10 @@ GEM
     unicode-display_width (2.1.0)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
-  codebreaker!
+  codebreaker_manfly!
   rake (~> 13.0)
   rspec (~> 3.10)
   rubocop (~> 1.7)
