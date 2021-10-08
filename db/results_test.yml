@@ -86,3 +86,25 @@ difficulty: :easy
 date: 2021-10-08
 attempts: 15
 number_of_hints: 2
+--- !ruby/object:Codebreaker::Game
+user: !ruby/object:RSpec::Mocks::InstanceVerifyingDouble
+  doubled_module: !ruby/object:RSpec::Mocks::NamedObjectReference
+    const_name: User
+  __expired: false
+  name: 
+  __sending_message: 
+difficulty: :easy
+date: 2021-10-08
+attempts: 15
+number_of_hints: 2
+--- !ruby/object:Codebreaker::Game
+user: !ruby/object:RSpec::Mocks::InstanceVerifyingDouble
+  doubled_module: !ruby/object:RSpec::Mocks::NamedObjectReference
+    const_name: User
+  __expired: false
+  name: 
+  __sending_message: 
+difficulty: :easy
+date: 2021-10-08
+attempts: 15
+number_of_hints: 2
