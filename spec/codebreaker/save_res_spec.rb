@@ -13,10 +13,6 @@ RSpec.describe Codebreaker::SaveRes do
       it { expect(described_class.new.load).to include(game.class) }
     end
 
-    # context "no saved data" do
-    #   it { expect { described_class.new.load }.to raise_error(Codebreaker::Validation::NoSavedData) }
-    # end
-
     context "saving file" do
       before do
         game.save_game
