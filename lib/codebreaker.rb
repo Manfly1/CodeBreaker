@@ -7,7 +7,6 @@ require_relative 'codebreaker/module/validation'
 require_relative 'codebreaker/gameload'
 require_relative 'codebreaker/user'
 require_relative 'codebreaker/file_loader'
-require_relative 'codebreaker/module/file_loader'
 require_relative 'codebreaker/version'
 
 module Codebreaker
