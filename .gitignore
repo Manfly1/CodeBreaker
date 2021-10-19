@@ -6,5 +6,5 @@
 /pkg/
 /spec/reports/
 /tmp/
-/.yaml/
-/.yml/
+*yaml
+*yml
