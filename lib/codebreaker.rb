@@ -14,7 +14,7 @@ module Codebreaker
     include Validation
 
     attr_reader :clues, :user, :difficulty,
-                :attempts_used, :hints_used, :very_secret_code,
+                :attempts_used, :hints_used, :secret_code,
                 :date
 
     DIFFICULTIES = {
@@ -38,8 +38,8 @@ module Codebreaker
     end
 
     def start_new_game
-      @very_secret_code = generate_random_code
-      @hints = @very_secret_code.clone
+      @secret_code = generate_random_code
+      @hints = @secret_code.clone
       @attempts_used = 0
       @hints_used = 0
       @user_guess = []
@@ -49,7 +49,7 @@ module Codebreaker
     def guess(user_guess)
       guess = user_guess.each_char.map(&:to_i)
       validate_guess(guess, CODE_LENGTH, RANGE_GUESS_CODE)
-      check_guess(guess, very_secret_code)
+      check_guess(guess, secret_code)
 
       increase_attempts
     end
