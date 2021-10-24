@@ -1,15 +1,6 @@
 # frozen_string_literal: true
 
-require 'yaml/store'
-require 'date'
-
-require_relative 'codebreaker/module/validation'
-require_relative 'codebreaker/game_maker'
-require_relative 'codebreaker/user'
-require_relative 'codebreaker/constants'
-require_relative 'codebreaker/statistics'
-require_relative 'codebreaker/storage'
-require_relative 'codebreaker/version'
+require_relative 'codebreaker/bootstrap'
 
   class Game
     include Validation
