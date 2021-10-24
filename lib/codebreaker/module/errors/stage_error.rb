@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class WrongStageError < StandardError
+class WrongPhaseError < StandardError
   def message
-    'Incorrect stage of the game'
+    'Incorrect phase of the game'
   end
 end

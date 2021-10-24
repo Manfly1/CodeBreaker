@@ -4,84 +4,89 @@ require 'yaml/store'
 require 'date'
 
 require_relative 'codebreaker/module/validation'
-require_relative 'codebreaker/gameload'
+require_relative 'codebreaker/game_maker'
 require_relative 'codebreaker/user'
-require_relative 'codebreaker/file_loader'
+require_relative 'codebreaker/constants'
+require_relative 'codebreaker/statistics'
+require_relative 'codebreaker/storage'
 require_relative 'codebreaker/version'
 
-module Codebreaker
   class Game
     include Validation
+    include GameMaker
+    include Constants
+    include Storage
 
-    attr_reader :clues, :user, :difficulty,
-                :attempts_used, :hints_used, :secret_code,
-                :date
-
-    DIFFICULTIES = {
-      easy: { attempts: 15, hints: 2 },
-      medium: { attempts: 10, hints: 1 },
-      hell: { attempts: 5, hints: 1 }
-    }.freeze
+    attr_reader :phase, :hints, :code, :user, :difficulty, :date
 
     CODE_LENGTH = 4
     RANGE_GUESS_CODE = (1..6).freeze
 
-    def initialize(difficulty:, user:, date: Date.today)
-      validate_difficulty(difficulty, DIFFICULTIES)
-
-      @user = user
+    def initialize(difficulty: DIFFICULTIES, user:, code:, phase: START_GAME,  date: Date.today)
       @difficulty = difficulty
+      @user = user
+      @code = code
+      @phase = phase
       @date = date
-
-      attempts
-      number_of_hints
     end
 
     def start_new_game
-      @secret_code = generate_random_code
-      @hints = @secret_code.clone
-      @attempts_used = 0
-      @hints_used = 0
-      @user_guess = []
-      @clues = []
+      raise WrongPhaseError unless @phase == START_GAME
+
+      @code = CODE_RANGE.sample(CODE_LENGTH).join
+      @hints = @code.dup
+      @phase = GAME
     end
 
     def guess(user_guess)
+      raise WrongPhaseError unless @phase == GAME
+
       guess = user_guess.each_char.map(&:to_i)
       validate_guess(guess, CODE_LENGTH, RANGE_GUESS_CODE)
-      check_guess(guess, secret_code)
 
-      increase_attempts
+      check_guess(guess, secret_code)
+      user.attempts -= ATTEMPTS_DECREMENT
     end
 
     def show_hint
-      validate_hints(hints_used, number_of_hints)
+      return if @hints.empty?
 
-      @hints_used += 1
-      @hints.shuffle!.pop
+      hint = @hints.chars.sample
+      @hints.sub!(hint, '')
+      user.hints -= HINTS_DECREMENT
+      hint
     end
 
-    def won?
-      @user_guess.nil?
+    def won?(result)
+      result == @code
     end
 
     def lost?
-      @attempts_used >= @attempts
+      user.attempts.zero?
     end
 
-    def save_game
-      FileLoader.new.save(self)
+    def save_game(game)
+      save_file(game)
     end
 
     def attempts
-      @attempts ||= DIFFICULTIES[difficulty.to_sym][:attempts]
+      (user.attempts < DIFFICULTIES[@difficulty][:attempts]) && user.attempts.positive?
     end
 
-    def number_of_hints
-      @number_of_hints ||= DIFFICULTIES[difficulty.to_sym][:hints]
+    def check_for_difficulties
+      DIFFICULTIES
     end
 
-    private
+    def end_game(guess)
+      raise WrongPhaseError unless @phase == GAME
+
+      if win?(guess)
+        @phase = WIN
+      elsif lose?
+        @phase = LOSE
+      end
+      @phase
+    end
 
     def generate_random_code
       Array.new(CODE_LENGTH) { rand(RANGE_GUESS_CODE) }
@@ -93,8 +98,9 @@ module Codebreaker
       @clues = gameload.clues
     end
 
-    def increase_attempts
-      @attempts_used += 1
+    def increase_attempts(input_value)
+        input_value, code, extra_char = check_position(input_value)
+        _input_value, code, _extra_char = check_inclusion(input_value, code, extra_char)
+        code
     end
   end
-end

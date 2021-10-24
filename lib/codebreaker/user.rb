@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
-module Codebreaker
+module Codebraker
   class User
     include Validation
+    include Constants
 
+    attr_accessor :attempts, :hints
     attr_reader :name
 
-    NAME_LENGTH = (3..20).freeze
+    def initialize(name:, attempts: GAME_ATTEMPTS, hints: GAME_HINTS)
+      @name = name
+      @attempts = attempts
+      @hints = hints
+    end
 
-    def initialize(name:)
-      validate_user_name(name, NAME_LENGTH)
+    def name=(name)
+      validate_name(name)
       @name = name
     end
   end
