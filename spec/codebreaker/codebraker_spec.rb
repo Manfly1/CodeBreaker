@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Codebreaker::Game do
+RSpec.describe Game do
   subject(:game) { described_class.new(difficulty: difficulty.keys[0].to_s, user: user) }
 
   let(:user) { instance_double('User') }

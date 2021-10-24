@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Codebreaker::FileLoader do
+RSpec.describe Codebreaker::Storage do
   let(:loader) { described_class }
   let(:difficulty) { Codebreaker::Game::DIFFICULTIES.keys.first }
   let(:game) { Codebreaker::Game.new(difficulty: difficulty, user: user) }

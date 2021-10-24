@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Codebraker
+module Codebreaker
   module Validation
     def validate_name(name)
       raise LengthError unless NAME_LENGTH.cover?(name.length)

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'bootstrap'
+require_relative 'storage'
 
-module Codebraker
+module Codebreaker
   module Statistics
     include Storage
 

@@ -2,7 +2,7 @@
 
 require_relative 'bootstrap'
 
-module Codebraker
+module Codebreaker
   class User
     include Validation
     include Constants

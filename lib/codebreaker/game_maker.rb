@@ -2,7 +2,7 @@
 
 require_relative 'constants'
 
-module Codebraker
+module Codebreaker
   include Constants
 
   module GameMaker

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Codebraker
+module Codebreaker
   module Constants
     GAME_ATTEMPTS = 0
     GAME_HINTS = 0

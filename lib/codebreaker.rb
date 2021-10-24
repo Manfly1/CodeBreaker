@@ -3,10 +3,10 @@
 require_relative 'codebreaker/bootstrap'
 
 class Game
-  include Validation
-  include GameMaker
-  include Constants
-  include Storage
+  include Codebreaker::Validation
+  include Codebreaker::GameMaker
+  include Codebreaker::Constants
+  include Codebreaker::Storage
 
   attr_reader :phase, :hints, :code, :user, :difficulty, :date
 

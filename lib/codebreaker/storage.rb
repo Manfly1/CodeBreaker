@@ -2,13 +2,13 @@
 
 require 'pry'
 
-module Codebraker
+module Codebreaker
   module Storage
     FILE_DIRECTORY = 'stats'
     FILE_NAME = 'stats.yml'
 
     def save_file(game)
-      raise WrongStageError unless game.stage == Settings::WIN
+      raise WrongPhaseError unless game.phase == Settings::WIN
 
       create_directory
       rating = load_file
@@ -35,8 +35,8 @@ module Codebraker
     def fetch_user_data(game)
       user_data = {}
       user_data[:name] = game.user.name
-      user_data[:used_attempts] = game.user.attempts
-      user_data[:used_hints] = game.user.hints
+      user_data[:attempts] = game.user.attempts
+      user_data[:hints] = game.user.hints
       user_data
     end
 

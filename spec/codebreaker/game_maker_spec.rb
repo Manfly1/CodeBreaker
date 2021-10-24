@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Codebreaker::Gameload do
+RSpec.describe Codebreaker::GameMaker do
   describe '#match' do
     exact = :exact
     non_exact = :non_exact

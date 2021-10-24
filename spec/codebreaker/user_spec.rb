@@ -1,22 +1,16 @@
 # frozen_string_literal: true
 
-RSpec.describe Codebreaker::User do
-  subject(:call) { described_class.new(name: name) }
+module Codebreaker
+  RSpec.describe Validation do
+    let(:test_name) { Class.new { extend Validation } }
 
-  describe '#initialize' do
-    context 'when name is too short' do
-      let(:name) { 'a' * (Codebreaker::User::NAME_LENGTH.min - 1) }
-
-      it 'raises ArgumentError when less than 3 characters' do
-        expect { call }.to raise_error(described_class::InvalidName)
+    describe '#validate_name' do
+      it 'raise LengthError if name has less than 3 letters' do
+        expect { test_name.validate_name('Mo') }.to raise_error LengthError
       end
-    end
 
-    context 'when name is too long' do
-      let(:name) { 'a' * (Codebreaker::User::NAME_LENGTH.max + 1) }
-
-      it 'raises ArgumentError when more than 20 characters' do
-        expect { call }.to raise_error(described_class::InvalidName)
+      it 'raise LengthError if name has more than 20 letters' do
+        expect { test_name.validate_name('Luvsanperenleizhangtsan') }.to raise_error LengthError
       end
     end
   end
