@@ -19,9 +19,6 @@ require_relative 'codebreaker/version'
 
     attr_reader :phase, :hints, :code, :user, :difficulty, :date
 
-    CODE_LENGTH = 4
-    RANGE_GUESS_CODE = (1..6).freeze
-
     def initialize(difficulty: DIFFICULTIES, user:, code:, phase: START_GAME,  date: Date.today)
       @difficulty = difficulty
       @user = user

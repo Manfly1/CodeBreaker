@@ -15,5 +15,7 @@ module Codebraker
       medium: { attempts: 10, hints: 1 },
       hell: { attempts: 5, hints: 1 }
     }.freeze
+    CODE_LENGTH = 4
+    RANGE_GUESS_CODE = (1..6).freeze
   end
 end
