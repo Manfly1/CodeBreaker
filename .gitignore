@@ -8,3 +8,4 @@
 /tmp/
 *yaml
 *yml
+/.rspec_status/
