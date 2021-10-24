@@ -24,11 +24,11 @@ RSpec.describe Game do
 
   context 'end of game' do
     it 'returns true if the guess is right' do
-      expect(game.won?('3142')).to be_truthy
+      expect(game.win?('3142')).to be_truthy
     end
 
     it 'returns false if the guess us wrong' do
-      expect(game.won?('3214')).to be_falsy
+      expect(game.win?('3214')).to be_falsy
     end
 
     it 'player has not lose' do

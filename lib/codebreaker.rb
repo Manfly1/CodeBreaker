@@ -21,7 +21,7 @@ class Game
   def start_new_game
     raise WrongPhaseError unless @phase == START_GAME
 
-    @code = RANGE_GUESS_CODE.sample(CODE_LENGTH).join
+    @code = CODE_RANGE.sample(CODE_LENGTH).join
     @possible_hints = @code.dup
     @phase = GAME
   end
@@ -49,7 +49,7 @@ class Game
     hint
   end
 
-  def won?(result)
+  def win?(result)
     result == @code
   end
 
@@ -72,7 +72,7 @@ class Game
   def end_game(guess)
     raise WrongPhaseError unless @phase == GAME
 
-    if won?(guess)
+    if win?(guess)
       @phase = WIN
     elsif lose?
       @phase = LOSE

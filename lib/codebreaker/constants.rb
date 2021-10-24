@@ -16,7 +16,7 @@ module Codebreaker
       hell: { attempts: 5, hints: 1 }
     }.freeze
     CODE_LENGTH = 4
-    RANGE_GUESS_CODE = (1..6).to_a.freeze
+    CODE_RANGE = (1..6).to_a.freeze
     EXACT = '+'
     NONEXACT = '-'
     CODE_NUMBERS = /^[1-6]{4}$/.freeze

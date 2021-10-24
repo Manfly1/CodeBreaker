@@ -11,7 +11,7 @@ module Codebreaker
     end
 
     def validate_guess(code)
-      raise InputError unless Codebreaker::RANGE_GUESS_CODE.match?(code)
+      raise InputError unless Codebreaker::CODE_RANGE.match?(code)
     end
   end
 end
