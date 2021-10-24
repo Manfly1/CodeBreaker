@@ -2,7 +2,6 @@
 
 module Codebraker
   module Validation
-
     def validate_name(name)
       raise LengthError unless NAME_LENGTH.cover?(name.length)
     end

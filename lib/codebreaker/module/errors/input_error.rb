@@ -2,6 +2,6 @@
 
 class InputError < StandardError
   def initialize
-    'Incorrect input'
+    super 'Incorrect input'
   end
 end

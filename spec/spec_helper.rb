@@ -4,7 +4,7 @@ ENV['DB_PATH'] = "#{Pathname(__FILE__).parent.dirname.realpath}/db/"
 ENV['DB_FILE'] = 'results_test.yml'
 
 require 'bundler/setup'
-require 'codebreaker'
+require 'codebreaker/bootstrap'
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = '.rspec_status'

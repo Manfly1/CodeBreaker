@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'bootstrap'
+
 module Codebraker
   class User
     include Validation
