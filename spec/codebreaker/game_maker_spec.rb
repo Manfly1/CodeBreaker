@@ -1,27 +1,35 @@
 # frozen_string_literal: true
 
-RSpec.describe Codebreaker::GameMaker do
-  describe '#match' do
-    exact = :exact
-    non_exact = :non_exact
-    test_data =
-      [
-        [[6, 5, 4, 3], [5, 6, 4, 3], [exact, exact, non_exact, non_exact]],
-        [[6, 5, 4, 3], [6, 5, 4, 4], [exact, exact, exact]],
-        [[6, 5, 4, 3], [6, 6, 6, 6], [exact]],
-        [[6, 5, 4, 3], [2, 6, 6, 6], [non_exact]],
-        [[1, 2, 3, 4], [3, 1, 2, 4], [exact, non_exact, non_exact, non_exact]],
-        [[1, 2, 3, 4], [1, 5, 2, 4], [exact, exact, non_exact]]
-      ]
+module Codebreaker
+  RSpec.describe Game do
+    let(:game) { Game.new }
 
-    test_data.length.times do |i|
-      context "when guess: #{test_data[i][0]}, code: #{test_data[i][1]}" do
-        let(:matcher) { described_class.new(test_data[i][0], test_data[i][1]) }
+    before { game.start_new_game }
 
-        before { matcher.match }
+    describe '#generate_signs' do
+      test_data =
+        [
+          ['5179', '2222', ''],
+          ['7253', '1113', '+'],
+          ['6881', '2666', '-'],
+          ['8275', '1256', '+-'],
+          ['2667', '1661', '++'],
+          ['2516', '6143', '--'],
+          ['1239', '1235', '+++'],
+          ['1274', '1524', '++-'],
+          ['5143', '5413', '++--'],
+          ['5634', '3456', '----'],
+          ['1234', '1234', '++++']
+        ]
 
-        it "expects as clues: #{test_data[i][2]}" do
-          expect(matcher.clues).to eq(test_data[i][2])
+      it 'attempts by 1' do
+        expect { game.generate_signs('1111') }.to change(game.user, :attempts).by(-1)
+      end
+
+      test_data.each do |code, guess, expected|
+        it "returnes #{expected} when generated code is #{code} and user code is #{guess}" do
+          game.instance_variable_set(:@code, code)
+          expect(game.generate_signs(guess)).to eq expected
         end
       end
     end

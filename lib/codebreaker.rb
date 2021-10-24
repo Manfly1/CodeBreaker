@@ -10,37 +10,41 @@ class Game
 
   attr_reader :phase, :hints, :code, :user, :difficulty, :date
 
-  def initialize(user:, code:, difficulty: DIFFICULTIES, phase: START_GAME, date: Date.today)
-    @difficulty = difficulty
-    @user = user
+  def initialize(code: '', user: Codebreaker::User.new, phase: START_GAME, difficulty: DIFFICULTIES, date: Date.today)
     @code = code
+    @user = user
     @phase = phase
+    @difficulty = difficulty
     @date = date
   end
 
   def start_new_game
     raise WrongPhaseError unless @phase == START_GAME
 
-    @code = CODE_RANGE.sample(CODE_LENGTH).join
-    @hints = @code.dup
+    @code = RANGE_GUESS_CODE.sample(CODE_LENGTH).join
+    @possible_hints = @code.dup
     @phase = GAME
   end
 
-  def guess(user_guess)
+  def generate_signs(input_value)
     raise WrongPhaseError unless @phase == GAME
 
-    guess = user_guess.each_char.map(&:to_i)
-    validate_guess(guess, CODE_LENGTH, RANGE_GUESS_CODE)
-
-    check_guess(guess, secret_code)
     user.attempts -= ATTEMPTS_DECREMENT
+    display_signs(input_value)
+  end
+
+  def assign_difficulty(input)
+    return unless DIFFICULTIES.include?(input.to_sym)
+
+    user.attempts = DIFFICULTIES[input.to_sym][:attempts]
+    user.hints = DIFFICULTIES[input.to_sym][:hints]
   end
 
   def show_hint
-    return if @hints.empty?
+    return if @possible_hints.empty?
 
-    hint = @hints.chars.sample
-    @hints.sub!(hint, '')
+    hint = @possible_hints.chars.sample
+    @possible_hints.sub!(hint, '')
     user.hints -= HINTS_DECREMENT
     hint
   end
@@ -49,7 +53,7 @@ class Game
     result == @code
   end
 
-  def lost?
+  def lose?
     user.attempts.zero?
   end
 
@@ -57,7 +61,7 @@ class Game
     save_file(game)
   end
 
-  def attempts
+  def attempts?
     (user.attempts < DIFFICULTIES[@difficulty][:attempts]) && user.attempts.positive?
   end
 
@@ -68,7 +72,7 @@ class Game
   def end_game(guess)
     raise WrongPhaseError unless @phase == GAME
 
-    if win?(guess)
+    if won?(guess)
       @phase = WIN
     elsif lose?
       @phase = LOSE
@@ -76,17 +80,7 @@ class Game
     @phase
   end
 
-  def generate_random_code
-    Array.new(CODE_LENGTH) { rand(RANGE_GUESS_CODE) }
-  end
-
-  def check_guess(guess, secret_code)
-    gameload = Codebreaker::Gameload.new(guess, secret_code)
-    @user_guess = gameload.match
-    @clues = gameload.clues
-  end
-
-  def increase_attempts(input_value)
+  def display_signs(input_value)
     input_value, code, extra_char = check_position(input_value)
     _input_value, code, _extra_char = check_inclusion(input_value, code, extra_char)
     code

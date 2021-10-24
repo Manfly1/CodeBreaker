@@ -4,11 +4,11 @@ require 'pry'
 
 module Codebreaker
   module Storage
-    FILE_DIRECTORY = 'stats'
-    FILE_NAME = 'stats.yml'
+    FILE_DIRECTORY = 'statistics'
+    FILE_NAME = 'statistics.yml'
 
     def save_file(game)
-      raise WrongPhaseError unless game.phase == Settings::WIN
+      raise WrongPhaseError unless game.phase == Constants::WIN
 
       create_directory
       rating = load_file
@@ -48,8 +48,8 @@ module Codebreaker
     def game_data(game)
       game_results = {}
       game_results[:difficulty] = game.difficulty
-      game_results[:available_attempts] = Settings::DIFFICULTIES[game.difficulty][:attempts]
-      game_results[:available_hints] = Settings::DIFFICULTIES[game.difficulty][:hints]
+      game_results[:available_attempts] = Constants::DIFFICULTIES[game.difficulty][:attempts]
+      game_results[:available_hints] = Constants::DIFFICULTIES[game.difficulty][:hints]
       game_results.merge(fetch_user_data(game))
     end
   end

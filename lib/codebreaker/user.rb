@@ -10,7 +10,7 @@ module Codebreaker
     attr_accessor :attempts, :hints
     attr_reader :name
 
-    def initialize(name:, attempts: GAME_ATTEMPTS, hints: GAME_HINTS)
+    def initialize(name: '', attempts: GAME_ATTEMPTS, hints: GAME_HINTS)
       @name = name
       @attempts = attempts
       @hints = hints
