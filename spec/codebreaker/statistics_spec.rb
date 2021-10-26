@@ -23,7 +23,7 @@ RSpec.describe Codebreaker::Statistics do
         test_game.user.instance_variable_set(:@name, name)
         test_game.user.attempts = attempts
         test_game.user.hints = hints
-        test_game.instance_variable_set(:@phase, Codebreaker::Constants::WIN)
+        test_game.instance_variable_set(:@phase, Codebreaker::Constants::WIN_STATUS)
         test_module.save_file(test_game)
       end
     end

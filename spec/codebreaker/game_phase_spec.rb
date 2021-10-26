@@ -6,7 +6,7 @@ module Codebreaker
     let(:test_class) { Class.new { include Storage }.new }
 
     context 'wrong phase error' do
-      before { game.instance_variable_set(:@phase, Constants::LOSE) }
+      before { game.instance_variable_set(:@phase, Constants::LOSE_STATUS) }
 
       it 'raises WrongPhaseError when user to start phase' do
         expect { game.start_new_game }.to raise_error WrongPhaseError
@@ -23,19 +23,19 @@ module Codebreaker
 
     context 'jump to the other phase' do
       it 'jumps from start phase to game phase' do
-        expect { game.start_new_game }.to change { game.phase }.from(Constants::START_GAME).to(Constants::GAME)
+        expect { game.start_new_game }.to change { game.phase }.from(Constants::START_STATUS).to(Constants::GAME_STATUS)
       end
 
       it 'jumps from game phase to winning phase' do
         game.start_new_game
         game.instance_variable_set(:@code, '1642')
-        expect { game.end_game('1642') }.to change { game.phase }.from(Constants::GAME).to(Constants::WIN)
+        expect { game.end_game('1642') }.to change { game.phase }.from(Constants::GAME_STATUS).to(Constants::WIN_STATUS)
       end
 
       it 'jumps from game phase to losing phase' do
         game.start_new_game
         game.instance_variable_set(:@code, '1642')
-        expect { game.end_game('1624') }.to change { game.phase }.from(Constants::GAME).to(Constants::LOSE)
+        expect { game.end_game('1624') }.to change { game.phase }.from(Constants::GAME_STATUS).to(Constants::LOSE_STATUS)
       end
     end
   end

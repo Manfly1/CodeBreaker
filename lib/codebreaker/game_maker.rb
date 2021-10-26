@@ -8,7 +8,7 @@ module Codebreaker
   module GameMaker
     def check_position(input_value, code = '', extra_char = '')
       code_selector(input_value).reverse_each do |index|
-        code += '+'
+        code += EXACT
         extra_char += input_value.slice(index)
       end
       [input_value, code, extra_char]
@@ -17,7 +17,7 @@ module Codebreaker
     def check_inclusion(input_value, code = '', extra_char = '')
       input_value.each_char do |char|
         if char_inclusion?(char, extra_char)
-          code += '-'
+          code += NON_EXACT
           extra_char += char
         end
       end

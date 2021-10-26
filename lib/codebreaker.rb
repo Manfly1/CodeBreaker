@@ -8,26 +8,32 @@ class Game
   include Codebreaker::Constants
   include Codebreaker::Storage
 
-  attr_reader :phase, :hints, :code, :user, :difficulty, :date
+  attr_reader :phase, :hints, :code, :user, :difficulty
 
-  def initialize(code: '', user: Codebreaker::User.new, phase: START_GAME, difficulty: DIFFICULTIES, date: Date.today)
+  START_STATUS = :start
+  GAME_STATUS = :game
+  WIN_STATUS = :win
+  LOSE_STATUS = :lose
+  HINTS_DECREMENT = 1
+  ATTEMPTS_DECREMENT = 1
+
+  def initialize(code: '', user: Codebreaker::User.new, phase: START_STATUS, difficulty: DIFFICULTIES)
     @code = code
     @user = user
     @phase = phase
     @difficulty = difficulty
-    @date = date
   end
 
   def start_new_game
-    raise WrongPhaseError unless @phase == START_GAME
+    raise WrongPhaseError unless @phase == START_STATUS
 
     @code = CODE_RANGE.sample(CODE_LENGTH).join
     @possible_hints = @code.dup
-    @phase = GAME
+    @phase = GAME_STATUS
   end
 
   def generate_signs(input_value)
-    raise WrongPhaseError unless @phase == GAME
+    raise WrongPhaseError unless @phase == GAME_STATUS
 
     user.attempts -= ATTEMPTS_DECREMENT
     display_signs(input_value)
@@ -70,12 +76,12 @@ class Game
   end
 
   def end_game(guess)
-    raise WrongPhaseError unless @phase == GAME
+    raise WrongPhaseError unless @phase == GAME_STATUS
 
     if win?(guess)
-      @phase = WIN
+      @phase = WIN_STATUS
     elsif lose?
-      @phase = LOSE
+      @phase = LOSE_STATUS
     end
     @phase
   end
