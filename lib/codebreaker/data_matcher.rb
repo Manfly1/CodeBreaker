@@ -5,7 +5,7 @@ require_relative 'constants'
 module Codebreaker
   include Constants
 
-  module GameMaker
+  module DataMatcher
     def check_position(input_value, code = '', extra_char = '')
       code_selector(input_value).reverse_each do |index|
         code += EXACT
