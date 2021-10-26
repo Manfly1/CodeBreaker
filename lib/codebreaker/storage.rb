@@ -8,7 +8,7 @@ module Codebreaker
     FILE_NAME = 'statistics.yml'
 
     def save_file(game)
-      raise WrongPhaseError unless game.phase == WIN_STATUS
+      raise WrongPhaseError unless game.phase == Game::WIN_STATUS
 
       create_directory
       rating = load_file

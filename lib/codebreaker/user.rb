@@ -4,8 +4,8 @@ require_relative 'bootstrap'
 
 module Codebreaker
   class User
-    
     include Constants
+    include Validation
 
     attr_accessor :attempts, :hints
     attr_reader :name
@@ -13,15 +13,11 @@ module Codebreaker
     GAME_ATTEMPTS = 0
     GAME_HINTS = 0
 
-    def initialize(name: '', attempts: GAME_ATTEMPTS, hints: GAME_HINTS)
+    def initialize(name: :name, attempts: GAME_ATTEMPTS, hints: GAME_HINTS)
       @name = name
       @attempts = attempts
       @hints = hints
-    end
-
-    def name=(name)
       validate_name(name)
-      @name = name
     end
   end
 end

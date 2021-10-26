@@ -4,7 +4,7 @@ require_relative 'codebreaker/bootstrap'
 
 class Game
   include Codebreaker::Validation
-  include Codebreaker::GameMaker
+  include Codebreaker::DataMatcher
   include Codebreaker::Constants
   include Codebreaker::Storage
 
@@ -36,7 +36,7 @@ class Game
     raise WrongPhaseError unless @phase == GAME_STATUS
 
     user.attempts -= ATTEMPTS_DECREMENT
-    display_signs(input_value)
+    attempt(input_value)
   end
 
   def assign_difficulty(input)
@@ -86,7 +86,7 @@ class Game
     @phase
   end
 
-  def display_signs(input_value)
+  def attempt(input_value)
     input_value, code, extra_char = check_position(input_value)
     _input_value, code, _extra_char = check_inclusion(input_value, code, extra_char)
     code
