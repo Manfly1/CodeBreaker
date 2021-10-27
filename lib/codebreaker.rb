@@ -8,20 +8,23 @@ class Game
   include Codebreaker::Constants
   include Codebreaker::Storage
 
-  attr_reader :phase, :hints, :code, :user, :difficulty
+  attr_reader :phase, :hints, :code, :user
 
   START_STATUS = :start
-  GAME_STATUS = :game
+  IN_GAME_STATUS = :in_game
   WIN_STATUS = :win
   LOSE_STATUS = :lose
   HINTS_DECREMENT = 1
   ATTEMPTS_DECREMENT = 1
 
-  def initialize(code: '', user: Codebreaker::User.new, phase: START_STATUS, difficulty: DIFFICULTIES)
-    @code = code
-    @user = user
-    @phase = phase
-    @difficulty = difficulty
+  def initialize()
+    @code = code == ''
+    @phase = phase == START_STATUS
+    user
+  end
+
+  def user
+    Codebreaker::User.new
   end
 
   def start_new_game
@@ -29,14 +32,7 @@ class Game
 
     @code = CODE_RANGE.sample(CODE_LENGTH).join
     @possible_hints = @code.dup
-    @phase = GAME_STATUS
-  end
-
-  def generate_signs(input_value)
-    raise WrongPhaseError unless @phase == GAME_STATUS
-
-    user.attempts -= ATTEMPTS_DECREMENT
-    attempt(input_value)
+    @phase = IN_GAME_STATUS
   end
 
   def assign_difficulty(input)
@@ -47,8 +43,6 @@ class Game
   end
 
   def show_hint
-    return if @possible_hints.empty?
-
     hint = @possible_hints.chars.sample
     @possible_hints.sub!(hint, '')
     user.hints -= HINTS_DECREMENT
@@ -67,16 +61,12 @@ class Game
     save_file(game)
   end
 
-  def attempts?
-    (user.attempts < DIFFICULTIES[@difficulty][:attempts]) && user.attempts.positive?
-  end
-
   def check_for_difficulties
     DIFFICULTIES
   end
 
   def end_game(guess)
-    raise WrongPhaseError unless @phase == GAME_STATUS
+    raise WrongPhaseError unless @phase == IN_GAME_STATUS
 
     if win?(guess)
       @phase = WIN_STATUS

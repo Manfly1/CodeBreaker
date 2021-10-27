@@ -7,17 +7,23 @@ module Codebreaker
     include Constants
     include Validation
 
-    attr_accessor :attempts, :hints
-    attr_reader :name
+    attr_reader :name, :difficulty
 
-    GAME_ATTEMPTS = 0
-    GAME_HINTS = 0
-
-    def initialize(name: :name, attempts: GAME_ATTEMPTS, hints: GAME_HINTS)
+    def initialize(difficulty = DIFFICULTIES)
       @name = name
-      @attempts = attempts
-      @hints = hints
+      @difficulty = difficulty
       validate_name(name)
+    end
+
+    def generate_signs(input_value)
+      raise WrongPhaseError unless @phase == IN_GAME_STATUS
+  
+      user.attempts -= ATTEMPTS_DECREMENT
+      attempt(input_value)
+    end
+
+    def attempts?
+      (user.attempts < DIFFICULTIES[@difficulty][:attempts]) && user.attempts.positive?
     end
   end
 end
