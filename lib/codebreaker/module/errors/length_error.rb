@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LengthError < StandardError
-  def message
-    'Incorrect length'
+  def initialize(message = 'Argument length is not correct. ')
+    super(message)
   end
 end

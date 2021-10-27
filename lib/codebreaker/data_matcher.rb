@@ -3,35 +3,43 @@
 require_relative 'constants'
 
 module Codebreaker
-  include Constants
+  class DataMatcher
+    include Constants
+    extend Validation
 
-  module DataMatcher
-    def check_position(input_value, code = '', extra_char = '')
-      code_selector(input_value).reverse_each do |index|
-        code += Codebreaker::EXACT
-        extra_char += input_value.slice(index)
-      end
-      [input_value, code, extra_char]
+    attr_reader :guess, :secret_code, :result, :non_exact_answer, :exact_answer
+
+    def initialize(guess, secret_code)
+      @secret_code = secret_code
+      @guess = break_number(guess)
     end
 
-    def check_inclusion(input_value, code = '', extra_char = '')
-      input_value.each_char do |char|
-        if char_inclusion?(char, extra_char)
-          code += Codebreaker::NON_EXACT
-          extra_char += char
-        end
+    def symbols(exact_answer = EXACT, non_exact_answer = NON_EXACT)
+      @exact_answer = exact_answer
+      @non_exact_answer = non_exact_answer
+    end
+
+    def check_guess
+      symbols
+      @result = @non_exact_answer * count_matched_numbers
+      @guess.each_with_index do |element, index|
+        @result.sub!(@non_exact_answer, @exact_answer) if element == @secret_code[index]
       end
-      [input_value, code, extra_char]
+      @result
+    end
+
+    def self.validate(guess)
+      validate_length(guess, CODE_LENGTH)
     end
 
     private
 
-    def code_selector(input_value)
-      (0...Codebreaker::CODE_LENGTH).select { |index| input_value[index] == @code[index] }
+    def count_matched_numbers
+      (@secret_code & @guess).map { |element| [@secret_code.count(element), @guess.count(element)].min }.sum
     end
 
-    def char_inclusion?(char, extra_char)
-      @code.include?(char) && !extra_char.include?(char)
+    def break_number(number)
+      number.to_s.scan(/./).map(&:to_i)
     end
   end
 end

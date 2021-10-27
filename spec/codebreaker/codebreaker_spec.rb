@@ -1,44 +1,32 @@
 # frozen_string_literal: true
 
 RSpec.describe Game do
-  let(:game) { Game.new }
+  let(:difficulty) { Codebreaker::Difficulty.new('easy') }
+  let(:game) { described_class.new(Codebreaker::User.new('manfly'), difficulty) }
 
-  before do
-    game.start_new_game
-    game.instance_variable_set(:@code, '3142')
-  end
-
-  describe '#start_new_game' do
-    it 'generate code' do
-      expect(game.instance_variable_get(:@code)).not_to be_empty
+  describe '.initialize' do
+    it 'secret is an Array' do
+      expect(game.secret_code.class).to eq(Array)
     end
 
-    it '4 digit' do
-      expect(game.instance_variable_get(:@code).size).to eq Game::CODE_LENGTH
+    it 'secret_code size equal to CODE_LENGTH' do
+      expect(game.secret_code.size).to eq(described_class::CODE_LENGTH)
     end
 
-    it 'number with 1 to 6 digits' do
-      expect(game.instance_variable_get(:@code)).to match(/[1-6]+/)
-    end
-  end
-
-  context 'end of game' do
-    it 'returns true if the guess is right' do
-      expect(game.win?('3142')).to be_truthy
+    it 'each element of secret is in CODE_RANGE' do
+      game.secret_code.each { |digit| expect(described_class::CODE_RANGE).to include(digit) }
     end
 
-    it 'returns false if the guess us wrong' do
-      expect(game.win?('3214')).to be_falsy
+    it 'player is instance of User class' do
+      expect(game.user.class).to eq(Codebreaker::User)
     end
 
-    it 'player has not lose' do
-      game.user.attempts = 1
-      expect(game.lose?).to be_falsy
+    it 'difficulty is instance of Difficulty class' do
+      expect(game.difficulty.class).to eq(Codebreaker::Difficulty)
     end
 
-    it 'player has lose' do
-      game.user.attempts = 0
-      expect(game.lose?).to be_truthy
+    it 'hint_number is equal to secret_code' do
+      expect(game.hint_number).to eq(game.secret_code)
     end
   end
 end

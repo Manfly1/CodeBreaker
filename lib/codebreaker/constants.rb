@@ -8,10 +8,9 @@ module Codebreaker
       hell: { attempts: 5, hints: 1 }
     }.freeze
     CODE_LENGTH = 4
-    CODE_RANGE = (1..6).to_a.freeze
+    CODE_RANGE = (1..6).freeze
     EXACT = '+'
     NON_EXACT = '-'
-    CODE_NUMBERS = /^[1-6]{4}$/.freeze
     NAME_LENGTH = (3..20).freeze
   end
 end

@@ -8,8 +8,7 @@ module Codebreaker
     FILE_NAME = 'statistics.yml'
 
     def save_file(game)
-      raise WrongPhaseError unless game.phase == Game::WIN_STATUS
-
+      
       create_directory
       rating = load_file
       rating << game_data(game)
@@ -35,8 +34,11 @@ module Codebreaker
     def fetch_user_data(game)
       user_data = {}
       user_data[:name] = game.user.name
-      user_data[:attempts] = game.user.attempts
-      user_data[:hints] = game.user.hints
+      user_data[:difficulty] = game.difficulty
+      user_data[:attempts] = game.difficulty.attempts,
+      user_data[:attempts_used] = game.difficulty.attempts - @game.attempts,
+      user_data[:hints] = @game.difficulty.hints
+      user_data[:hints_used] = @game.difficulty.hints - @game.hints
       user_data
     end
 
@@ -47,9 +49,10 @@ module Codebreaker
 
     def game_data(game)
       game_results = {}
+      game_results[:name] = game.user.name
       game_results[:difficulty] = game.difficulty
-      game_results[:available_attempts] = Constants::DIFFICULTIES[game.difficulty][:attempts]
-      game_results[:available_hints] = Constants::DIFFICULTIES[game.difficulty][:hints]
+      game_results[:available_attempts] = game.difficulty.attempts
+      game_results[:available_hints] = game.difficulty.hints
       game_results.merge(fetch_user_data(game))
     end
   end

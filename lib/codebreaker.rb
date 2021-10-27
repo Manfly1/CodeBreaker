@@ -4,81 +4,39 @@ require_relative 'codebreaker/bootstrap'
 
 class Game
   include Codebreaker::Validation
-  include Codebreaker::DataMatcher
   include Codebreaker::Constants
   include Codebreaker::Storage
 
-  attr_reader :phase, :hints, :code, :user
+  attr_reader :secret_code, :hints, :hint_number, :attempts, :user, :result, :difficulty
 
-  START_STATUS = :start
-  IN_GAME_STATUS = :in_game
-  WIN_STATUS = :win
-  LOSE_STATUS = :lose
-  HINTS_DECREMENT = 1
-  ATTEMPTS_DECREMENT = 1
-
-  def initialize()
-    @code = code == ''
-    @phase = phase == START_STATUS
-    user
+  def initialize(user, difficulty)
+    @user = user
+    @difficulty = difficulty
+    @attempts = difficulty.attempts
+    @hints = difficulty.hints
+    @secret_code = generate_secret_code
+    @hint_number = @secret_code.clone
   end
 
-  def user
-    Codebreaker::User.new
+  def guess(answer)
+    @attempts -= 1
+    @result = Codebreaker::DataMatcher.new(answer, @secret_code).check_guess
+    @result
   end
 
-  def start_new_game
-    raise WrongPhaseError unless @phase == START_STATUS
+  def hint
+    raise HintError if @hints.zero?
 
-    @code = CODE_RANGE.sample(CODE_LENGTH).join
-    @possible_hints = @code.dup
-    @phase = IN_GAME_STATUS
+    @hints -= 1
+    random_index = rand(@hint_number.size)
+    number = @hint_number[random_index]
+    @hint_number.delete_at(random_index)
+    number
   end
 
-  def assign_difficulty(input)
-    return unless DIFFICULTIES.include?(input.to_sym)
+  private
 
-    user.attempts = DIFFICULTIES[input.to_sym][:attempts]
-    user.hints = DIFFICULTIES[input.to_sym][:hints]
-  end
-
-  def show_hint
-    hint = @possible_hints.chars.sample
-    @possible_hints.sub!(hint, '')
-    user.hints -= HINTS_DECREMENT
-    hint
-  end
-
-  def win?(result)
-    result == @code
-  end
-
-  def lose?
-    user.attempts.zero?
-  end
-
-  def save_game(game)
-    save_file(game)
-  end
-
-  def check_for_difficulties
-    DIFFICULTIES
-  end
-
-  def end_game(guess)
-    raise WrongPhaseError unless @phase == IN_GAME_STATUS
-
-    if win?(guess)
-      @phase = WIN_STATUS
-    elsif lose?
-      @phase = LOSE_STATUS
-    end
-    @phase
-  end
-
-  def attempt(input_value)
-    input_value, code, extra_char = check_position(input_value)
-    _input_value, code, _extra_char = check_inclusion(input_value, code, extra_char)
-    code
+  def generate_secret_code
+    Array.new(Codebreaker::Constants::CODE_LENGTH) { rand(Codebreaker::Constants::CODE_RANGE) }
   end
 end

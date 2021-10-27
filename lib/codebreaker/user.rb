@@ -5,25 +5,17 @@ require_relative 'bootstrap'
 module Codebreaker
   class User
     include Constants
-    include Validation
+    extend Validation
 
-    attr_reader :name, :difficulty
+    attr_accessor :name
 
-    def initialize(difficulty = DIFFICULTIES)
+    def initialize(name)
       @name = name
-      @difficulty = difficulty
-      validate_name(name)
     end
 
-    def generate_signs(input_value)
-      raise WrongPhaseError unless @phase == IN_GAME_STATUS
-  
-      user.attempts -= ATTEMPTS_DECREMENT
-      attempt(input_value)
-    end
-
-    def attempts?
-      (user.attempts < DIFFICULTIES[@difficulty][:attempts]) && user.attempts.positive?
+    def self.validate(name)
+      validate_argument_type(name, String)
+      validate_length(name, NAME_LENGTH)
     end
   end
 end

@@ -1,19 +1,25 @@
 # frozen_string_literal: true
 
-module Codebreaker
-  RSpec.describe Game do
-    let(:game) { described_class.new }
+RSpec.describe Codebreaker::Difficulty do
+  let(:difficulty) { described_class.new('easy') }
 
-    before { game.start_new_game }
-
-    describe '#available_difficulties' do
-      it 'returns hash' do
-        expect(game.check_for_difficulties.class).to eq(Hash)
+  describe '.validate' do
+    context 'when given unknown difficulty' do
+      it 'raise DifficultyError' do
+        expect { described_class.validate('hardveryhard') }.to raise_error(DifficultyError)
       end
+    end
+  end
 
-      it 'available difficulties' do
-        expect(game.check_for_difficulties).to eq(Game::DIFFICULTIES)
-      end
+  describe '#attempts' do
+    it 'return Integer' do
+      expect(difficulty.attempts.class).to eq(Integer)
+    end
+  end
+
+  describe '#hints' do
+    it 'return Integer' do
+      expect(difficulty.hints.class).to eq(Integer)
     end
   end
 end
