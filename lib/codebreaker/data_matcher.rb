@@ -4,8 +4,12 @@ require_relative 'constants'
 
 module Codebreaker
   class DataMatcher
-    include Constants
     extend Validation
+
+    CODE_LENGTH = 4
+    CODE_RANGE = (1..6).freeze
+    EXACT = '+'
+    NON_EXACT = '-'
 
     attr_reader :guess, :secret_code, :result, :non_exact_answer, :exact_answer
 

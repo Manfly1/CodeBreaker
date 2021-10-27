@@ -4,8 +4,10 @@ require_relative 'codebreaker/bootstrap'
 
 class Game
   include Codebreaker::Validation
-  include Codebreaker::Constants
   include Codebreaker::Storage
+
+    CODE_LENGTH = 4
+    CODE_RANGE = (1..6).freeze
 
   attr_reader :secret_code, :hints, :hint_number, :attempts, :user, :result, :difficulty
 

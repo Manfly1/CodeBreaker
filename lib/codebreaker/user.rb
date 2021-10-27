@@ -4,9 +4,10 @@ require_relative 'bootstrap'
 
 module Codebreaker
   class User
-    include Constants
     extend Validation
 
+    NAME_LENGTH = (3..20).freeze
+    
     attr_accessor :name
 
     def initialize(name)
