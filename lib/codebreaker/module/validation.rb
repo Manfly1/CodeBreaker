@@ -25,7 +25,7 @@ module Codebreaker
       raise LengthError until argument == length_argument
     end
 
-     def validate_argument_type(argument, class_name)
+    def validate_argument_type(argument, class_name)
       raise WrongArgumentError until argument.is_a?(class_name)
     end
   end
