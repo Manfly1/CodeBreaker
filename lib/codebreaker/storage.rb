@@ -33,12 +33,6 @@ module Codebreaker
       default_data
     end
 
-    def default_data
-      {
-        user_statistics: []
-      }
-    end
-
     def storage_path
       File.join(FILE_DIRECTORY, FILE_NAME)
     end
