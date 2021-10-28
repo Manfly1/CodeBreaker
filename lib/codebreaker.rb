@@ -2,43 +2,72 @@
 
 require_relative 'codebreaker/bootstrap'
 
-class Game
-  include Codebreaker::Validation
-  include Codebreaker::Storage
+class Game < Codebreaker::Entity
+  attr_reader :difficulty, :user, :attempts_amount, :hints_amount, :code
 
-    CODE_LENGTH = 4
-    CODE_RANGE = (1..6).freeze
-
-  attr_reader :secret_code, :hints, :hint_number, :attempts, :user, :result, :difficulty
-
-  def initialize(user, difficulty)
-    @user = user
+  def initialize(difficulty, user)
+    super()
     @difficulty = difficulty
-    @attempts = difficulty.attempts
-    @hints = difficulty.hints
-    @secret_code = generate_secret_code
-    @hint_number = @secret_code.clone
+    @user = user
   end
 
-  def guess(answer)
-    @attempts -= 1
-    @result = Codebreaker::DataMatcher.new(answer, @secret_code).check_guess
-    @result
+  def start
+    prepare_game
   end
 
-  def hint
-    raise HintError if @hints.zero?
+  def self.user_statistic
+    store = Codebreaker::Storage.new
+    store.data[:user_statistics].sort_by { |stats| [stats.difficulty, stats.attempts, stats.hints] }
+  end
 
-    @hints -= 1
-    random_index = rand(@hint_number.size)
-    number = @hint_number[random_index]
-    @hint_number.delete_at(random_index)
-    number
+  def save_statistic
+    store = Codebreaker::Storage.new
+    store.data[:user_statistics] << current_statistic
+    store.save
+  end
+
+  def take_hint
+    @hints_amount -= 1
+    @hints.pop
+  end
+
+  def make_turn(guess)
+    @guess = guess
+    @attempts_amount -= 1
+
+    matcher = Codebreaker::CodeMatcher.new(code, guess.code)
+    matcher.match_codes
+  end
+
+  def win?
+    code == @guess&.code
+  end
+
+  def lose?
+    attempts_amount < 1 && !win?
+  end
+
+  def restart
+    prepare_game
   end
 
   private
 
-  def generate_secret_code
-    Array.new(Codebreaker::Constants::CODE_LENGTH) { rand(Codebreaker::Constants::CODE_RANGE) }
+  def current_statistic
+    Codebreaker::User.new(user: user, difficulty: difficulty,
+                          attempts: difficulty.attempts - attempts_amount,
+                          hints: difficulty.hints - hints_amount)
+  end
+
+  def validate
+    raise ClassValidError unless valid_class?(Codebreaker::User, user)
+    raise ClassValidError unless valid_class?(Codebreaker::Difficulty, difficulty)
+  end
+
+  def prepare_game
+    @attempts_amount = difficulty.attempts
+    @hints_amount = difficulty.hints
+    @code = Codebreaker::CodeGenerator.new.generate
+    @hints = code.sample(hints_amount)
   end
 end

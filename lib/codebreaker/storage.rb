@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require 'pry'
-
 module Codebreaker
-  module Storage
+  class Storage
     FILE_DIRECTORY = 'statistics'
     FILE_NAME = 'statistics.yml'
 

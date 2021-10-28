@@ -9,4 +9,7 @@
 *yaml
 *yml
 .rspec_status
-difficulty_factory.rb
+
+codebreaker_manfly-0.1.1.gem
+/vendor/bundle/
+/db/

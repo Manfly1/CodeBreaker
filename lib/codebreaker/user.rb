@@ -3,20 +3,24 @@
 require_relative 'bootstrap'
 
 module Codebreaker
-  class User
-    extend Validation
+  class User < Entity
+    attr_reader :name
 
-    NAME_LENGTH = (3..20).freeze
-    
-    attr_accessor :name
+    NAME_MIN_LENGTH = 3
+    NAME_MAX_LENGTH = 20
 
     def initialize(name)
+      super()
       @name = name
     end
 
-    def self.validate(name)
-      validate_argument_type(name, String)
-      validate_length(name, NAME_LENGTH)
+    private
+
+    def validate
+      return raise ClassValidError unless valid_class?(String, name)
+
+      raise MinLengthError unless valid_string_min_length?(name, NAME_MIN_LENGTH)
+      raise MaxLengthError unless valid_string_max_length?(name, NAME_MAX_LENGTH)
     end
   end
 end

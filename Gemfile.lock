@@ -8,8 +8,13 @@ GEM
   specs:
     ast (2.4.2)
     coderay (1.1.3)
+    concurrent-ruby (1.1.9)
     diff-lcs (1.4.4)
     docile (1.4.0)
+    faker (2.19.0)
+      i18n (>= 1.6, < 2)
+    i18n (1.8.10)
+      concurrent-ruby (~> 1.0)
     method_source (1.0.0)
     parallel (1.21.0)
     parser (3.0.2.0)
@@ -34,7 +39,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.2)
-    rubocop (1.22.1)
+    rubocop (1.22.3)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -59,6 +64,7 @@ PLATFORMS
 
 DEPENDENCIES
   codebreaker_manfly!
+  faker
   pry
   rake (~> 13.0)
   rspec (~> 3.10)

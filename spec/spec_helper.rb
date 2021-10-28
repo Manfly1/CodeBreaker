@@ -2,14 +2,12 @@
 
 require 'simplecov'
 SimpleCov.start do
-  minimum_coverage 89
+  minimum_coverage 93
   add_filter 'spec'
   add_filter 'vendor'
 end
 
-ENV['DB_PATH'] = "#{Pathname(__FILE__).parent.dirname.realpath}/db/"
-ENV['DB_FILE'] = 'results_test.yml'
-
+require 'faker'
 require 'bundler/setup'
 require 'codebreaker'
 
