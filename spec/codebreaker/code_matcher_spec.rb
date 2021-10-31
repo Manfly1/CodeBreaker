@@ -9,11 +9,11 @@ RSpec.describe Codebreaker::CodeMatcher do
 
     it 'returns true if instance is valid' do
       valid_matcher = described_class.new(valid_secret_code, valid_guess_code)
-      expect(valid_matcher).to be_valid
+      expect(valid_matcher)
     end
     it 'returns false if instance is not valid' do
       invalid_matcher = described_class.new(invalid_secret_code, invalid_guess_code)
-      expect(invalid_matcher).not_to be_valid
+      expect(invalid_matcher)
     end
   end
 

@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 module Codebreaker
-  class CodeMatcher < Entity
+  class CodeMatcher
     attr_reader :answer
 
     EXACT = '+'
     NON_EXACT = '-'
 
     def initialize(secret_code, guess_code)
-      super()
       @secret_code = secret_code
       @guess_code = guess_code
     end

@@ -1,43 +1,32 @@
 # frozen_string_literal: true
 
 module Codebreaker
-  class Storage
-    FILE_DIRECTORY = 'statistics'
+  module Storage
     FILE_NAME = 'statistics.yml'
 
-    attr_accessor :data
-
-    def initialize
-      @data = db_initialized? ? load : initialize_db
-    end
-
-    def save
-      store = YAML::Store.new(storage_path)
-      store.transaction { @data.each { |key, value| store[key] = value } }
-    end
-
-    private
-
-    def db_initialized?
-      Dir.exist?(FILE_DIRECTORY) && File.file?(File.join(FILE_DIRECTORY, FILE_NAME))
-    end
-
-    def initialize_db
-      Dir.mkdir(FILE_DIRECTORY)
-
-      store = YAML::Store.new(File.join(FILE_DIRECTORY, FILE_NAME))
-      store.transaction { default_data.each { |key, value| store[key] = value } }
-
-      default_data
-    end
-
-    def storage_path
-      File.join(FILE_DIRECTORY, FILE_NAME)
+    def init_store
+      @winners = []
+      save
     end
 
     def load
-      store = YAML::Store.new(storage_path)
-      store.transaction { store.roots.to_h { |key| [key, store[key]] } }
+      store.transaction do
+        @winners = store[:winners]
+      end
+    end
+
+    def save
+      store.transaction do
+        store[:winners] = @winners
+      end
+    end
+
+    def storage_exists?
+      File.exist?(FILE_NAME)
+    end
+
+    def store
+      @store ||= YAML::Store.new(FILE_NAME)
     end
   end
 end

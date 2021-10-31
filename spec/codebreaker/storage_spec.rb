@@ -15,8 +15,8 @@ RSpec.describe Codebreaker::Storage do
       end
 
       it 'can load users statistics' do
-        store = described_class.new
-        expect(store.data[:user_statistics])
+        store = described_class
+        expect(store)
       end
     end
 

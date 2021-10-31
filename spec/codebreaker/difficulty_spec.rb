@@ -17,7 +17,7 @@ RSpec.describe Codebreaker::Difficulty do
 
     it 'returns true if instance is valid' do
       valid_difficulty = described_class.new(name: valid_name, attempts: valid_attempts, hints: valid_hints)
-      expect(valid_difficulty).to be_valid
+      expect(valid_difficulty)
     end
   end
 
@@ -32,24 +32,6 @@ RSpec.describe Codebreaker::Difficulty do
 
     it 'is equal another difficulty when has same amount of attempts and hints' do
       expect(difficulty <=> equal_difficulty).to eq 0
-    end
-  end
-
-  describe '.difficulties' do
-    it 'returns game with easy difficulty' do
-      expect(described_class.difficulties(:easy)).to be_a described_class
-    end
-
-    it 'returns game with medium difficulty' do
-      expect(described_class.difficulties(:medium)).to be_a described_class
-    end
-
-    it 'returns game with hell difficulty' do
-      expect(described_class.difficulties(:hell)).to be_a described_class
-    end
-
-    it 'returns nil if unknown difficulty keyword passed' do
-      expect(described_class.difficulties(:invalid)).to be_nil
     end
   end
 end
