@@ -8,6 +8,7 @@ require_relative 'errors/class_validate_error'
 require_relative 'errors/min_length_error'
 require_relative 'errors/max_length_error'
 require_relative 'errors/negative_integer_error'
+require_relative 'errors/invalid_difficulty_error'
 
 module Codebreaker
   module Validation
