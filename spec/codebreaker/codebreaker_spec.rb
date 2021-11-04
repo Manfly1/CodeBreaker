@@ -1,55 +1,84 @@
 # frozen_string_literal: true
 
 RSpec.describe Game do
-  subject(:game) {}
+  let(:game) { described_class.new }
 
-  let(:user) { Codebreaker::User.new(Faker::Name.first_name) }
-  let(:difficulty) { Codebreaker::Difficulty.new(name: 'Easy', attempts: 10, hints: 2) }
+  describe '#secret_code' do
+    context 'when game starts it initializes with secret code' do
+      subject(:game_secret_code) { @secret_code }
 
-  describe '#valid?' do
-    subject(:invalid_game) { described_class.new('easy', Faker::Name.first_name) }
+      let(:secret_code) { '6616' }
 
-    it 'returns true if instance is valid' do
-      expect(game)
+      it 'has secret number' do
+        allow_any_instance_of(described_class).to receive(:generate_secret_code).and_return(@secret_code)
+        expect(@secret_code).to eq(@secret_code)
+      end
+    end
+    context '#when generate secret code' do
+      it 'should not be empty' do
+        expect(game.instance_variable_get(:@secret_code)).not_to be_empty
+      end
+      it 'should saves 4 numbers secret code' do
+        expect(game.instance_variable_get(:@secret_code).length).to eq 4
+      end
+      it 'should saves secret code with numbers from 1 to 6' do
+        game.instance_variable_get(:@secret_code).each do |number|
+          expect(number).to be_between(1, 6).inclusive
+        end
+      end
     end
   end
 
-  describe '#start' do
-    it 'generates code' do
-      expect(@secret_code)
+  describe '#create_difficulty' do
+    context 'when correct difficulty' do
+      it 'should create game with different difficulty' do
+        Codebreaker::DifficultyFactory::DIFFICULTIES.each do |_name, difficulty|
+          current_game = described_class.new
+          expect(current_game.attempts_amount).to eq difficulty[:attempts_amount]
+          expect(current_game.hints_amount).to eq difficulty[:hints_amount]
+        end
+      end
     end
-
-    it 'has a version number' do
-      expect(Codebreaker::VERSION).not_to be nil
-    end
-
-    it 'initializes attempts' do
-      expect(@attempts_amount)
-    end
-
-    it 'initializes hints' do
-      expect(@hints_amount)
+  end
+  context 'take_attempt' do
+    it 'decreases attempts by one when used' do
+      subject.instance_variable_set(:@attempts_amount, 3)
+      expect { subject.attempts_amount }.to change(subject, :attempts_amount).by(0)
     end
   end
 
-  describe '#save_statistic' do
-    it 'can save user statistic' do
-      expect { game.save }
+  context 'take_hint' do
+    it 'show hint' do
+      game.create_difficulty(Codebreaker::DifficultyFactory::DIFFICULTIES[:hell])
+      game.hints_amount
+      expect(game.hints_amount) == 1
+    end
+    it 'hint_number is equal to secret_code' do
+      expect(@hint).to eq(@secret_code)
     end
   end
 
-  describe '#make_turn' do
-    let(:guess) do
-      guess = Codebreaker::CodeGenerator
-      allow(guess).to receive(@secret_code).and_return([1, 2, 3, 4])
-      guess
-    end
-    let(:match_result) { '++++' }
+  describe '#win? or lose?' do
+    subject(:player_win?) { game.win? }
 
-    before do
-      matcher = instance_double(Codebreaker::CodeMatcher)
-      allow(matcher).to receive(:match_codes).and_return(match_result)
-      allow(Codebreaker::CodeMatcher).to receive(:new).and_return(matcher)
+    before { game.instance_variable_set(:@result, result) }
+
+    context 'when player wins' do
+      let(:result) { '++++' }
+
+      it { expect(player_win?).to be_falsey }
+      it 'return false' do
+        expect(game.win?).to be false
+      end
+    end
+
+    context 'when player loose' do
+      let(:result) { '--' }
+
+      it { expect(player_win?).to be_falsey }
+      it 'return false' do
+        expect(game.lose?).to be false
+      end
     end
   end
 end
