@@ -5,13 +5,15 @@ require_relative 'codebreaker/bootstrap'
 class Game
   extend Codebreaker::Storage
 
-  attr_reader :difficulty, :user, :attempts_amount, :hints_amount, :code
+  attr_reader :difficulty, :user, :attempts, :hints, :code
 
   STATUS_IN_PROGRESS = :in_progress
   STATUS_WIN = :win
   STATUS_LOSE = :lose
 
-  def initialize
+  def initialize(name, difficulty)
+    @name = name
+    @difficulty = difficulty
     @secret_code = Codebreaker::CodeGenerator.generate
     @status = STATUS_IN_PROGRESS
     @hints = @secret_code.sample(@secret_code.length)
@@ -34,14 +36,14 @@ class Game
   end
 
   def take_hint
-    return unless @user.hints?
+    return unless @user.hints
 
-    @user.hint
+    @user.hints
     @hints.pop
   end
 
   def take_attempt(code, guess)
-    return equal if @user.attempts?
+    return equal if @user.attempts
 
     matcher = Codebreaker::CodeMatcher.new(code, guess)
     matcher.secret_code
