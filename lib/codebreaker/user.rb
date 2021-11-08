@@ -3,17 +3,18 @@
 require_relative 'bootstrap'
 
 module Codebreaker
-  class User
+  class User < BaseEntity
     attr_reader :name, :difficulty, :used_attempts, :used_hints
 
     NAME_MIN_LENGTH = 3
     NAME_MAX_LENGTH = 20
 
-    def initialize(*)
+    def initialize(name, difficulty)
       @name = name
       @difficulty = difficulty
       @used_attempts = 0
       @used_hints = 0
+      super
     end
 
     def hints?

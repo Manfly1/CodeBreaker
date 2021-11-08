@@ -2,6 +2,7 @@
 
 module Codebreaker
   class BaseEntity
+    include Validation
     def initialize(*)
       validate
     end

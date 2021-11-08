@@ -47,21 +47,21 @@ RSpec.describe Codebreaker::Validation do
 
   describe '#valid_string_min_length?' do
     it 'returns true if string minimal length is greater than or equal passed number' do
-      expect(validator).not_to be_valid_string_min_length('aaa', 2)
+      expect(validator).to be_valid_string_min_length('aaa', 2)
     end
 
     it 'returns false if string minimal length is not greater than or equal passed number' do
-      expect(validator).to be_valid_string_min_length('aaa', 4)
+      expect(validator).not_to be_valid_string_min_length('aaa', 4)
     end
   end
 
   describe '#valid_string_max_length?' do
     it 'returns true if string maximal length is less than or equal passed number' do
-      expect(validator).not_to be_valid_string_max_length('aaa', 4)
+      expect(validator).to be_valid_string_max_length('aaa', 4)
     end
 
     it 'returns false if string maximal length is not less than or equal passed number' do
-      expect(validator).to be_valid_string_max_length('aaa', 2)
+      expect(validator).not_to be_valid_string_max_length('aaa', 2)
     end
   end
 

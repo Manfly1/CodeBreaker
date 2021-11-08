@@ -29,11 +29,11 @@ module Codebreaker
     end
 
     def valid_string_min_length?(string, min_length)
-      string.length <= min_length
+      string.length >= min_length
     end
 
     def valid_string_max_length?(string, max_length)
-      string.length >= max_length
+      string.length <= max_length
     end
 
     def valid_only_numeric_string?(string)
