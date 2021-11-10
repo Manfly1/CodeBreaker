@@ -31,11 +31,11 @@ RSpec.describe Game do
     
     context "success" do
   
-        it 'shoud have choose right attempts' do
+        it 'should have choose right attempts' do
           expect(difficulty.attempts).to eq(15)
         end
     
-        it 'shoud have choose right hints' do
+        it 'should have choose right hints' do
           expect(difficulty.hints).to eq(2)
         end
     context "falsey" do
