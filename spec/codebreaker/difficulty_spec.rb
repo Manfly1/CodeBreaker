@@ -22,5 +22,7 @@ RSpec.describe Codebreaker::Difficulty do
     it 'is equal another difficulty when has same amount of attempts and hints' do
       expect(difficulty <=> equal_difficulty).to eq(0)
     end
+
   end
+  
 end

@@ -34,25 +34,27 @@ class Game
   end
 
   def take_hint
-    return unless @user.hints_amount
+    user.hint if user.hints?
 
-    @user.hints_amount
     @hints.pop
   end
 
-  def take_attempt(code, guess)
-    return equal if @user.attempts_amount
+  def take_attempt(guess)
+    return equal(@secret_code, guess) if @user.attempts?
 
-    matcher = Codebreaker::CodeMatcher.new(code, guess)
-    matcher.secret_code
     @status = STATUS_LOSE
     nil
   end
 
   private
 
-  def equal(_guess)
+  def equal(guess)
     @user.attempt
-    return unless @user.hints?
+    matcher = Codebreaker::CodeGenerator.new(secret_code, guess)
+  end
+
+  def win
+    @winners << Codebreaker::Winner.new(user)
+    @status = STATUS_WIN
   end
 end

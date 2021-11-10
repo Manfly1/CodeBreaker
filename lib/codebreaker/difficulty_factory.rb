@@ -5,17 +5,17 @@ module Codebreaker
     DIFFICULTIES = {
 
       easy: {
-        name: 'Easy',
+        name: 'easy',
         attempts: 15,
         hints: 2
       },
       medium: {
-        name: 'Medium',
+        name: 'medium',
         attempts: 10,
         hints: 1
       },
       hell: {
-        name: 'Hell',
+        name: 'hell',
         attempts: 5,
         hints: 1
       }

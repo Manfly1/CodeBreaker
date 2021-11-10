@@ -4,7 +4,7 @@ RSpec.describe Codebreaker::Storage do
   let(:directory_path) { 'Codebreaker::Storage::FILE_DIRECTORY' }
   let(:filename) { 'Codebreaker::Storage::FILE_NAME' }
 
-  describe 'instance creation' do
+  describe '#init_store' do
     context 'when db initialized' do
       let(:fixtures_directory_path) { 'spec/codebreaker/fixtures' }
       let(:fixtures_filename) { 'test.yml' }
