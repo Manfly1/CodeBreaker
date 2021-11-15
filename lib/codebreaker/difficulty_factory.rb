@@ -26,7 +26,7 @@ module Codebreaker
       when DIFFICULTIES[:easy] then Difficulty.new(DIFFICULTIES[:easy])
       when DIFFICULTIES[:medium] then Difficulty.new(DIFFICULTIES[:medium])
       when DIFFICULTIES[:hell] then Difficulty.new(DIFFICULTIES[:hell])
-      else raise InvalidDifficultyError
+      else raise Errors::InvalidDifficultyError
       end
     end
   end

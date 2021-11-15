@@ -2,10 +2,9 @@
 
 module Codebreaker
   module Storage
-    FILE_NAME = 'statistics.yml'
+    FILE_NAME = './store/statistics.yml'
 
     def init_store
-      @winners = []
       save
     end
 

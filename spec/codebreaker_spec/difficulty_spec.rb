@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Codebreaker::Difficulty do
-  let(:difficulty) { Codebreaker::Difficulty.new(name, attempts, hints) }
+  let(:difficulty) { Codebreaker::Difficulty.new(name: name, attempts: attempts, hints: hints) }
   let(:name) { :easy }
   let(:attempts) { 15 }
   let(:hints) { 2 }
 
-  let(:equal_difficulty) { described_class.new(name, attempts, hints) }
-  let(:easy_difficulty) { described_class.new(name, attempts, hints) }
-  let(:hell_difficulty) { described_class.new(name, attempts, hints) }
+  let(:equal_difficulty) { described_class.new(name: name, attempts: attempts, hints: hints) }
+  let(:easy_difficulty) { described_class.new(name: name, attempts: attempts, hints: hints) }
+  let(:hell_difficulty) { described_class.new(name: name, attempts: attempts, hints: hints) }
 
   describe '#<=>' do
     it 'is harder when fewer attempts and hints' do
@@ -22,7 +22,5 @@ RSpec.describe Codebreaker::Difficulty do
     it 'is equal another difficulty when has same amount of attempts and hints' do
       expect(difficulty <=> equal_difficulty).to eq(0)
     end
-
   end
-  
 end

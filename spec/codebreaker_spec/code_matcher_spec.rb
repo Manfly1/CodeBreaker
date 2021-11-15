@@ -15,8 +15,10 @@ RSpec.describe Codebreaker::CodeMatcher do
       ['5634', '3456', '----'],
       ['1234', '1234', '++++']
     ].each do |value|
-      it "tests that #{value.first} equals to #{value.last}" do
-        expect(subject.secret_code(value[1], value[0])).to eq value.last
+      it 'returns valid result' do
+        secret_code, user_code, result = value
+
+        expect(subject.match(user_code, secret_code)).to eq result
       end
     end
   end

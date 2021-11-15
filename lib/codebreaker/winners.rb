@@ -1,19 +1,11 @@
 # frozen_string_literal: true
 
 module Codebreaker
-  class Winner < BaseEntity
+  class Winner
     attr_reader :user, :created_at
 
-    def initialize(user)
-      @user = user
+    def initialize(_user)
       @created_at = DateTime.now
-      super
-    end
-
-    private
-
-    def validate
-      raise ClassValidError unless valid_class?(String, name)
     end
   end
 end

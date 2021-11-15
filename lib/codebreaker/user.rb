@@ -36,10 +36,10 @@ module Codebreaker
     private
 
     def validate
-      raise ClassValidError unless valid_class?(String, name)
-      raise MinLengthError unless valid_string_min_length?(name, NAME_MIN_LENGTH)
-      raise MaxLengthError unless valid_string_max_length?(name, NAME_MAX_LENGTH)
-      raise ClassValidError unless valid_class?(Difficulty, difficulty)
+      raise Errors::ClassValidError unless valid_class?(String, name)
+      raise Errors::MinLengthError unless valid_string_min_length?(name, NAME_MIN_LENGTH)
+      raise Errors::MaxLengthError unless valid_string_max_length?(name, NAME_MAX_LENGTH)
+      raise Errors::ClassValidError unless valid_class?(Difficulty, difficulty)
     end
   end
 end

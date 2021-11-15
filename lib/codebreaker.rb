@@ -40,7 +40,7 @@ class Game
   end
 
   def take_attempt(guess)
-    return equal(@code, guess) if @user.attempts?
+    return equal(@secret_code, guess) if user.attempts?
 
     @status = STATUS_LOSE
     nil
@@ -48,13 +48,8 @@ class Game
 
   private
 
-  def equal(guess)
-    @user.attempt
-    matcher = Codebreaker::CodeMatcher.secret_code(code, guess)
-  end
-
-  def win
-    @winners << Codebreaker::Winner.new(user)
-    @status = STATUS_WIN
+  def equal(_secret_code, guess)
+    user.attempt
+    Codebreaker::CodeMatcher.secret_code(@secret_code, guess)
   end
 end

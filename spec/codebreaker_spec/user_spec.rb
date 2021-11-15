@@ -2,7 +2,7 @@
 
 RSpec.describe Codebreaker::User do
   let(:game) { described_class.new }
-  let(:difficulty) { Codebreaker::Difficulty.new(name, attempts, hints) }
+  let(:difficulty) { Codebreaker::Difficulty.new(name: name, attempts: attempts, hints: hints) }
   let(:name) { :easy }
   let(:attempts) { 15 }
   let(:hints) { 2 }

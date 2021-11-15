@@ -3,7 +3,7 @@
 require 'yaml/store'
 require 'date'
 
-require_relative 'module/validation'
+require_relative 'validation'
 require_relative 'base_entity'
 require_relative 'code_generate'
 require_relative 'code_matcher'
