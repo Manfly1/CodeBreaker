@@ -11,9 +11,11 @@ RSpec.describe Game do
   let(:attempts) { 15 }
   let(:hints) { 2 }
   let(:invalid_name) { 123 }
+  let(:guess) { 1224 }
 
   describe '#create_user' do
     context 'success' do
+
       it 'creates user' do
         expect(game.create_user('Username', difficulty)).to be_instance_of(Codebreaker::User)
         expect(difficulty.attempts).to eq(attempts)
@@ -21,9 +23,11 @@ RSpec.describe Game do
       end
     end
     context 'falsey' do
+
       it 'creates user' do
         expect { game.create_user(invalid_name, difficulty) }.to raise_error(Codebreaker::Errors::ClassValidError)
         expect { game.create_user(' ', difficulty) }.to raise_error(Codebreaker::Errors::MinLengthError)
+        expect { game.create_user('asdaaaaaaaaaaaaaaasdasdadas ', difficulty) }.to raise_error(Codebreaker::Errors::MaxLengthError)
         expect { game.create_user(invalid_name, difficulty) }.to raise_error(Codebreaker::Errors::ClassValidError)
       end
     end
@@ -31,18 +35,24 @@ RSpec.describe Game do
 
   describe '#create_difficulty' do
     context 'success' do
-      it 'should have choose right name difficulty' do
-        expect do
-          game.create_difficulty(name).not_to raise_error(Codebreaker::Errors::InvalidDifficultyError)
-        end
-      end
-      it 'should have choose right attempts' do
-        expect(difficulty.attempts).to eq(15)
-      end
 
-      it 'should have choose right hints' do
-        expect(difficulty.hints).to eq(2)
-      end
+        [
+          Codebreaker::DifficultyFactory::DIFFICULTIES[:easy],
+          Codebreaker::DifficultyFactory::DIFFICULTIES[:medium],
+          Codebreaker::DifficultyFactory::DIFFICULTIES[:hell]
+        ].each do |level|
+          it 'when valid difficulty' do
+            expect(game.create_difficulty(level))
+            end
+          
+        end
+        it 'has attempts for each difficulty' do
+          expect(difficulty.attempts).to eq(Codebreaker::DifficultyFactory::DIFFICULTIES[:easy][:attempts])
+        end
+    
+        it 'has hints for each difficulty' do
+          expect(difficulty.hints).to eq(Codebreaker::DifficultyFactory::DIFFICULTIES[:easy][:hints])
+        end
       context 'falsey' do
         it 'enter invalid difficulty' do
           expect do
@@ -53,25 +63,29 @@ RSpec.describe Game do
     end
 
     describe '#take_attempt' do
-      context 'guess is valid' do
-        it '#take_attempt not change @attempts value if called for the first time' do
-          game.stub(:take_attempt)
-          expect { game.take_attempt(:win?) }.not_to(change { game.instance_variable_get(:@attempts) })
-        end
-      end
       context 'true' do
-        keys = %w[hints attempts secret_code]
+        let(:user) { double('Codebreaker::User') }
 
-        keys.each do |key|
-          it "return value should include :#{key}" do
-            game.stub(:take_attempt)
-            subject.instance_variable_set(:@secret_code, '1234')
-            expect(game.take_attempt([:"#{key}"])).to be_nil
-          end
+        before do
+          allow(game).to receive(:user).and_return(user)
+          allow(user).to receive(:attempts?).and_return(true)
+          allow(user).to receive(:attempt).and_return(true)
+          game.instance_variable_set(:@secret_code, 1234)
+          game.instance_variable_set(:@user, user)
+          game.instance_variable_set(:@attempts, attempts)
         end
-        context 'guess is invalid' do
-          it 'returns nil' do
-            game.stub(:take_attempt)
+
+        it 'check if you made a attempt' do
+          expect ( game.take_attempt(1234)).to eq('++++')
+        end
+
+        it 'attempts counter changes by 1' do
+          expect { game.take_attempt(guess) }.to change { user.instance_variable_get(:@attempts_used) }.by(1)
+        end
+
+        context 'false' do
+
+          it 'enter string value' do
             expect(game.take_attempt('invalid_code')).to be_falsey
           end
         end
@@ -87,7 +101,7 @@ RSpec.describe Game do
           game.instance_variable_set(:@hints, hints)
         end
 
-        it '' do
+        it 'check if it returns a hint' do
           [1, 2, 3, 4].reverse.each do |hint|
             expect(game.take_hint).to eq hint
           end
@@ -95,62 +109,16 @@ RSpec.describe Game do
       end
     end
 
-    describe '#win?' do
-      before do
-        game.instance_variable_set(:@secret_code, [1, 2, 3, 4])
-      end
-
-      it 'returns true if user wins game' do
-        game.stub(:take_attempt)
-        game.take_attempt(@secret_code)
-        expect(game.win?).to be false
-      end
-
-      it 'returns false if the user has not yet won a game' do
-        game.stub(:take_attempt)
-        game.take_attempt(@secret_code)
-        expect(game.win?).to be false
-      end
-
-      context 'should be false if previous guess was not success' do
-        specify do
-          game.instance_variable_set(:@result, '+++-')
-          expect(game.win?).to be_falsey
-        end
-
-        specify do
-          game.instance_variable_set(:@result, nil)
-          expect(game.win?).to be_falsey
-        end
+    describe '#win?, lose?' do
+      it 'input win message' do
+        expect(game.instance_variable_set(:@status, Game::STATUS_WIN)).to eq :win
       end
     end
 
-    describe '#lose?' do
-      it 'returns true if user loses game' do
-        game.instance_variable_set(:@attempts, 0)
-        expect(game.lose?).to be false
-      end
-
-      it 'returns false if the user has not yet lose a game' do
-        game.instance_variable_set(:@attempts, 1)
-        expect(game.lose?).to be false
-      end
-
-      context 'should return false' do
-        specify 'guesses quantity is 0 and answer is "++++"' do
-          game.instance_variable_set(:@result, '++++')
-          expect(game.lose?).to be_falsey
-        end
-
-        specify 'guesses quantity grate than 0 and answer is "++++"' do
-          game.instance_variable_set(:@result, '++++')
-          expect(game.lose?).to be_falsey
-        end
-
-        specify 'guesses quantity grate than 0 and answer is "++-"' do
-          game.instance_variable_set(:@result, '++-')
-          expect(game.lose?).to be_falsey
-        end
+    context 'when user lose' do
+      it 'input lose message' do
+        (Codebreaker::DifficultyFactory::DIFFICULTIES[:easy][:attempts] - 1).times { game.take_attempt(guess) }
+        expect(game.take_attempt(guess)[:status]).to eq(Game::STATUS_LOSE)
       end
     end
   end

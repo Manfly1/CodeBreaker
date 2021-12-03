@@ -2,7 +2,6 @@
 
 require_relative 'errors/range_error'
 require_relative 'errors/non_numeric_string_error'
-require_relative 'errors/non_positive_integer_error'
 require_relative 'errors/empty_strings_error'
 require_relative 'errors/class_validate_error'
 require_relative 'errors/min_length_error'

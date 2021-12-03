@@ -7,8 +7,6 @@ module Codebreaker
       validate
     end
 
-    private
-
     def validate; end
   end
 end

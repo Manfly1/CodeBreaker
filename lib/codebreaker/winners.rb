@@ -5,6 +5,7 @@ module Codebreaker
     attr_reader :user, :created_at
 
     def initialize(_user)
+      @user = user
       @created_at = DateTime.now
     end
   end

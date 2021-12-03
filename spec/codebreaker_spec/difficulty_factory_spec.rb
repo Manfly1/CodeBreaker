@@ -13,6 +13,7 @@ RSpec.describe Codebreaker::DifficultyFactory do
       expect(easy_difficulty.hints).to eq(2)
       expect(easy_difficulty.attempts).to eq(15)
     end
+
     it 'medium level' do
       medium_difficulty
       expect(medium_difficulty.hints).to eq(1)
