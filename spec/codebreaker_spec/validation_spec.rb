@@ -20,17 +20,17 @@ RSpec.describe Codebreaker::Validation do
     end
 
     it 'returns true if string is empty' do
-      expect(validator.valid_non_empty_string?('')).to eq false    
+      expect(validator.valid_non_empty_string?('')).to eq false
+    end
   end
-end
   describe '#valid_positive_integer?' do
     it 'returns true if integer is greater than 0' do
-      expect(validator.valid_positive_integer?(1)).to eq true    
+      expect(validator.valid_positive_integer?(1)).to eq true
     end
     it 'returns false if integer is not greater than 0' do
-      expect(validator.valid_positive_integer?(0)).to eq false    
+      expect(validator.valid_positive_integer?(0)).to eq false
+    end
   end
-end
   describe '#valid_string_min_length?' do
     it 'returns true if string minimal length is greater than or equal passed number' do
       expect(validator.valid_string_min_length?('aaa', 2)).to eq true
@@ -44,11 +44,11 @@ end
   describe '#valid_string_max_length?' do
     it 'returns true if string maximal length is less than or equal passed number' do
       expect(validator.valid_string_max_length?('aaa', 4)).to eq true
-        end
+    end
 
     it 'returns false if string maximal length is not less than or equal passed number' do
       expect(validator.valid_string_max_length?('aaa', 2)).to eq false
-        end
+    end
   end
 
   describe '#valid_only_numeric_string?' do

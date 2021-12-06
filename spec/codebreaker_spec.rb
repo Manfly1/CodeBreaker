@@ -15,44 +15,37 @@ RSpec.describe Game do
 
   describe '#create_user' do
     context 'success' do
-
       it 'creates user' do
-        expect(game.create_user('Username', difficulty)).to be_instance_of(Codebreaker::User)
-        expect(difficulty.attempts).to eq(attempts)
-        expect(difficulty.hints).to eq(hints)
+        expect(user = game.create_user('Username', difficulty)).to be_instance_of(Codebreaker::User)
+        expect(user.difficulty.attempts).to eq(attempts)
+        expect(user.difficulty.hints).to eq(hints)
       end
     end
     context 'falsey' do
-
-      it 'creates user' do
+      it 'does not create user' do
         expect { game.create_user(invalid_name, difficulty) }.to raise_error(Codebreaker::Errors::ClassValidError)
         expect { game.create_user(' ', difficulty) }.to raise_error(Codebreaker::Errors::MinLengthError)
-        expect { game.create_user('asdaaaaaaaaaaaaaaasdasdadas ', difficulty) }.to raise_error(Codebreaker::Errors::MaxLengthError)
-        expect { game.create_user(invalid_name, difficulty) }.to raise_error(Codebreaker::Errors::ClassValidError)
+        expect do
+          game.create_user('asdaaaaaaaaaaaaaaasdasdadas ', difficulty)
+        end.to raise_error(Codebreaker::Errors::MaxLengthError)
       end
     end
   end
 
   describe '#create_difficulty' do
     context 'success' do
-
-        [
-          Codebreaker::DifficultyFactory::DIFFICULTIES[:easy],
-          Codebreaker::DifficultyFactory::DIFFICULTIES[:medium],
-          Codebreaker::DifficultyFactory::DIFFICULTIES[:hell]
-        ].each do |level|
-          it 'when valid difficulty' do
-            expect(game.create_difficulty(level))
-            end
-          
+      [
+        Codebreaker::DifficultyFactory::DIFFICULTIES[:easy],
+        Codebreaker::DifficultyFactory::DIFFICULTIES[:medium],
+        Codebreaker::DifficultyFactory::DIFFICULTIES[:hell]
+      ].each do |level|
+        it 'when valid difficulty' do
+          difficulty = game.create_difficulty(level)
+          expect(difficulty).to be_instance_of(Codebreaker::Difficulty)
+          expect(difficulty.attempts).to eq(level[:attempts])
+          expect(difficulty.hints).to eq(level[:hints])
         end
-        it 'has attempts for each difficulty' do
-          expect(difficulty.attempts).to eq(Codebreaker::DifficultyFactory::DIFFICULTIES[:easy][:attempts])
-        end
-    
-        it 'has hints for each difficulty' do
-          expect(difficulty.hints).to eq(Codebreaker::DifficultyFactory::DIFFICULTIES[:easy][:hints])
-        end
+      end
       context 'falsey' do
         it 'enter invalid difficulty' do
           expect do
@@ -72,7 +65,6 @@ RSpec.describe Game do
           allow(user).to receive(:attempt).and_return(true)
           game.instance_variable_set(:@secret_code, 1234)
           game.instance_variable_set(:@user, user)
-          game.instance_variable_set(:@attempts, attempts)
         end
 
         it 'check if you made a attempt' do
@@ -84,7 +76,6 @@ RSpec.describe Game do
         end
 
         context 'false' do
-
           it 'enter string value' do
             expect(game.take_attempt('invalid_code')).to be_falsey
           end
@@ -109,16 +100,24 @@ RSpec.describe Game do
       end
     end
 
-    describe '#win?, lose?' do
-      it 'input win message' do
-        expect(game.instance_variable_set(:@status, Game::STATUS_WIN)).to eq :win
+    describe '#win?' do
+      before do
+        game.instance_variable_set(:@status, Game::STATUS_WIN)
+      end
+      context 'when user win '
+      it 'set status WIN' do
+        expect(game.win?).to eq true
       end
     end
-
+  end
+  describe '#lose?' do
+    before do
+      game.instance_variable_set(:@status, Game::STATUS_LOSE)
+    end
     context 'when user lose' do
-      it 'input lose message' do
+      it 'set status Lose' do
         (Codebreaker::DifficultyFactory::DIFFICULTIES[:easy][:attempts] - 1).times { game.take_attempt(guess) }
-        expect(game.take_attempt(guess)[:status]).to eq(Game::STATUS_LOSE)
+        expect(game.lose?).to eq true
       end
     end
   end

@@ -4,7 +4,7 @@ module Codebreaker
   class Difficulty
     attr_reader :name, :attempts, :hints
 
-    NEGATIVE_INTEGER = 0.freeze
+    NEGATIVE_INTEGER = 0
 
     def initialize(name:, attempts:, hints:)
       @name = name
@@ -19,6 +19,5 @@ module Codebreaker
       raise Errors::NegativeIntegerError unless  valid_non_negative_integer?(attempts, NEGATIVE_INTEGER)
       raise Errors::NegativeIntegerError unless  valid_non_negative_integer?(hints, NEGATIVE_INTEGER)
     end
-
   end
 end
