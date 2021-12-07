@@ -55,70 +55,31 @@ RSpec.describe Game do
       end
     end
 
-    describe '#take_attempt' do
-      context 'true' do
-        let(:user) { double('Codebreaker::User') }
-
-        before do
-          allow(game).to receive(:user).and_return(user)
-          allow(user).to receive(:attempts?).and_return(true)
-          allow(user).to receive(:attempt).and_return(true)
-          game.instance_variable_set(:@secret_code, 1234)
-          game.instance_variable_set(:@user, user)
-        end
-
-        it 'check if you made a attempt' do
-          expect ( game.take_attempt(1234)).to eq('++++')
-        end
-
-        it 'attempts counter changes by 1' do
-          expect { game.take_attempt(guess) }.to change { user.instance_variable_get(:@attempts_used) }.by(1)
-        end
-
-        context 'false' do
-          it 'enter string value' do
-            expect(game.take_attempt('invalid_code')).to be_falsey
-          end
-        end
-      end
-
-      describe '#take_hint' do
-        let(:user) { double('Codebreaker::User') }
-        let(:hints) { [1, 2, 3, 4] }
-        before do
-          allow(game).to receive(:user).and_return(user)
-          allow(user).to receive(:hints?).and_return(true)
-          allow(user).to receive(:hint).and_return(true)
-          game.instance_variable_set(:@hints, hints)
-        end
-
-        it 'check if it returns a hint' do
-          [1, 2, 3, 4].reverse.each do |hint|
-            expect(game.take_hint).to eq hint
-          end
-        end
-      end
-    end
-
-    describe '#win?' do
+    describe '#take_hint' do
+      let(:user) { double('Codebreaker::User') }
+      let(:hints) { [1, 2, 3, 4] }
       before do
-        game.instance_variable_set(:@status, Game::STATUS_WIN)
+        allow(game).to receive(:user).and_return(user)
+        allow(user).to receive(:hints?).and_return(true)
+        allow(user).to receive(:hint).and_return(true)
+        game.instance_variable_set(:@hints, hints)
       end
-      context 'when user win '
-      it 'set status WIN' do
-        expect(game.win?).to eq true
+
+      it 'check if it returns a hint' do
+        [1, 2, 3, 4].reverse.each do |hint|
+          expect(game.take_hint).to eq hint
+        end
       end
     end
   end
-  describe '#lose?' do
+
+  describe '#win?' do
     before do
-      game.instance_variable_set(:@status, Game::STATUS_LOSE)
+      game.instance_variable_set(:@status, Game::STATUS_WIN)
     end
-    context 'when user lose' do
-      it 'set status Lose' do
-        (Codebreaker::DifficultyFactory::DIFFICULTIES[:easy][:attempts] - 1).times { game.take_attempt(guess) }
-        expect(game.lose?).to eq true
-      end
+    context 'when user win '
+    it 'set status WIN' do
+      expect(game.win?).to eq true
     end
   end
 end
